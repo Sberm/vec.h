@@ -30,7 +30,7 @@ void test1(char *buf, size_t len)
 	for (int i = 0; i < SMALL_NUM / 2; i++)
 		vec__pop(int_v);
 
-	for (size_t i = 0; i < vec__len(int_v); i++) {
+	for (int i = 0; i < vec__len(int_v); i++) {
 		printed += snprintf(buf + printed, len - printed, "%d", vec__at(int_v, i));
 		printed += snprintf(buf + printed, len - printed, " ");
 	}
@@ -58,7 +58,7 @@ void test2(char *buf, size_t len)
 	for (int i = 0; i < 50; i++)
 		vec__push(int_v, i);
 
-	for (size_t i = 0; i < vec__len(int_v); i++) {
+	for (int i = 0; i < vec__len(int_v); i++) {
 		printed += snprintf(buf + printed, len - printed, "%d", vec__at(int_v, i));
 		printed += snprintf(buf + printed, len - printed, " ");
 	}

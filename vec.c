@@ -87,7 +87,7 @@ void *__vec__at(void *__vec, size_t pos)
 	return vec->raw + pos * vec->mem_size;
 }
 
-size_t vec__len(void *__vec)
+size_t vec__len_st(void *__vec)
 {
 	struct vec *vec = __vec;
 
