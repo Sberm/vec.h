@@ -49,6 +49,7 @@ int __vec__expand(struct vec *vec, size_t new_size)
 
 	vec->raw = __new;
 	vec->capacity = capacity;
+
 	return 0;
 }
 
@@ -80,11 +81,13 @@ void vec__pop(void *__vec)
 void *__vec__at(void *__vec, size_t pos)
 {
 	struct vec *vec = __vec;
+
 	return vec->raw + pos * vec->mem_size;
 }
 
 size_t vec__len(void *__vec)
 {
 	struct vec *vec = __vec;
+
 	return vec->len;
 }
