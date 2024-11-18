@@ -120,11 +120,22 @@ void test4(char *buf, size_t len, char *str1, char *str2)
 	printed += snprintf(buf + printed, len - printed, "%s", vec__at(str_v, 1));
 }
 
+void test5(char *buf, size_t len, char *str)
+{
+	char **str_v = vec__new(sizeof(char *));
+	size_t printed = 0;
+
+	vec__push(str_v, str);
+
+	printed += snprintf(buf + printed, len - printed, "%s ", vec__at(str_v, 0));
+}
+
 int main(int argc, char *argv[])
 {
 	char buf[2048], verbose = 0;
 	char str1[] = "cutiepie";
 	char str2[] = "Denzel";
+	char str3[] = "this test is designed to fail";
 
 	buf[0] = 0;
 
@@ -151,6 +162,10 @@ int main(int argc, char *argv[])
 
 	test4(buf, sizeof(buf), str1, str2);
 	ASSERT(buf, "cutiepie Denzel", 4);
+	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+
+	test5(buf, sizeof(buf), str3);
+	ASSERT(buf, "wrong answer", 5);
 	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
 
 	return 0;
