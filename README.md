@@ -10,15 +10,13 @@ vec__push(int_v, elem1);
 vec__push(int_v, elem2);
 vec__push(int_v, elem3);
 
-/* second element: 14 */
 int tmp = vec__at(int_v, 1);
-printf("second element: %d\n", tmp);
+printf("second element: %d\n", tmp); /* second element: 14 */
 
 vec__pop(int_v);
 
-/* vector length: 2 */
 int len = vec__len(int_v);
-printf("vector length: %d\n", len);
+printf("vector length: %d\n", len); /* vector length: 2 */
 
 vec__free(int_v);
 ```
