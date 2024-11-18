@@ -11,3 +11,6 @@ vec.o: vec.c vec.h
 
 test.o: test.c
 	gcc -O2 -c $(INCLUDE) $<
+
+clean:
+	rm -rf $(TARGETS) vec_test
