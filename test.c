@@ -130,6 +130,34 @@ void test5(char *buf, size_t len, char *str)
 	printed += snprintf(buf + printed, len - printed, "%s ", vec__at(str_v, 0));
 }
 
+void test6(char *buf, size_t len)
+{
+	double *double_v = vec__new(sizeof(double)), tmp = 114.514;
+	size_t printed = 0;
+
+	vec__push(double_v, tmp);
+	printed += snprintf(buf + printed, len - printed, "%d ", vec__len(double_v));
+
+	vec__pop(double_v);
+	printed += snprintf(buf + printed, len - printed, "%d ", vec__len(double_v));
+
+	vec__pop(double_v);
+	printed += snprintf(buf + printed, len - printed, "%d ", vec__len(double_v));
+
+	for (int i = 0; i < 99; ++i)
+		vec__push(double_v, tmp);
+
+	printed += snprintf(buf + printed, len - printed, "%d ", vec__len(double_v));
+
+	for (int i = 0; i < 1; ++i)
+		vec__pop(double_v);
+
+	for (int i = 0; i < 20; ++i)
+		vec__push(double_v, tmp);
+
+	printed += snprintf(buf + printed, len - printed, "%d", vec__len(double_v));
+}
+
 int main(int argc, char *argv[])
 {
 	char buf[2048], verbose = 0;
@@ -166,6 +194,10 @@ int main(int argc, char *argv[])
 
 	test5(buf, sizeof(buf), str3);
 	ASSERT(buf, "wrong answer", 5);
+	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+
+	test6(buf, sizeof(buf));
+	ASSERT(buf, "1 0 0 99 118", 6);
 	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
 
 	return 0;
