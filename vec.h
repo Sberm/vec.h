@@ -1,6 +1,8 @@
 #ifndef VEC_H
 #define VEC_H
 
+#include <stddef.h>
+
 void *vec__new(size_t mem_size);
 void vec__free(void *__vec);
 void vec__pop(void *__vec);
