@@ -13,6 +13,7 @@ struct vec {
 void *vec__new(size_t mem_size)
 {
 	struct vec *vec = malloc(sizeof(struct vec));
+
 	if (vec == NULL)
 		return NULL;
 
@@ -74,6 +75,7 @@ int __vec__push(void *__vec, void *elem, size_t elem_size)
 void vec__pop(void *__vec)
 {
 	struct vec *vec = __vec;
+
 	if (vec->len > 0)
 		--vec->len;
 }
