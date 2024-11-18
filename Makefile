@@ -6,5 +6,8 @@ all: vec_test
 vec_test: $(TARGETS)
 	gcc $(TARGETS) -o $@
 
-%.o: %.c
-	gcc -O2 -c $(INCLUDE) $^
+vec.o: vec.c vec.h
+	gcc -O2 -c $(INCLUDE) $<
+
+test.o: test.c
+	gcc -O2 -c $(INCLUDE) $<
