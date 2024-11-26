@@ -158,6 +158,20 @@ void test6(char *buf, size_t len)
 	printed += snprintf(buf + printed, len - printed, "%d", vec__len(double_v));
 }
 
+void test7(char *buf, size_t len)
+{
+	int *int_v = vec__new(sizeof(int)), to_insert = 10;
+	size_t printed = 0;
+
+	vec__push(int_v, to_insert);
+	vec__push(int_v, to_insert);
+	printed += snprintf(buf + printed, len - printed,"%d ", vec__is_empty(int_v));
+
+	vec__pop(int_v);
+	vec__pop(int_v);
+	printed += snprintf(buf + printed, len - printed, "%d", vec__is_empty(int_v));
+}
+
 int main(int argc, char *argv[])
 {
 	char buf[2048], verbose = 0;
@@ -198,6 +212,10 @@ int main(int argc, char *argv[])
 
 	test6(buf, sizeof(buf));
 	ASSERT(buf, "1 0 0 99 118", 6);
+	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+
+	test7(buf, sizeof(buf));
+	ASSERT(buf, "0 1", 6);
 	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
 
 	return 0;
