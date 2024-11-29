@@ -2,6 +2,8 @@
 #include <time.h>
 #include <assert.h>
 #include <string.h>
+#include <time.h>
+#include <stdlib.h>
 
 #include "vec.h"
 
@@ -106,6 +108,8 @@ void test3(char *buf, size_t len)
 	res = vec__at(custom_struct_v, 14);
 
 	printed += snprintf(buf + printed, len - printed, "%.3f %hd %p %s", res.d1, res.s1, res.p, res.c);
+
+	vec__free(custom_struct_v);
 }
 
 void test4(char *buf, size_t len, char *str1, char *str2)
@@ -118,6 +122,8 @@ void test4(char *buf, size_t len, char *str1, char *str2)
 
 	printed += snprintf(buf + printed, len - printed, "%s ", vec__at(str_v, 0));
 	printed += snprintf(buf + printed, len - printed, "%s", vec__at(str_v, 1));
+
+	vec__free(str_v);
 }
 
 void test5(char *buf, size_t len, char *str)
@@ -128,6 +134,8 @@ void test5(char *buf, size_t len, char *str)
 	vec__push(str_v, str);
 
 	printed += snprintf(buf + printed, len - printed, "%s ", vec__at(str_v, 0));
+
+	vec__free(str_v);
 }
 
 void test6(char *buf, size_t len)
@@ -156,6 +164,8 @@ void test6(char *buf, size_t len)
 		vec__push(double_v, tmp);
 
 	printed += snprintf(buf + printed, len - printed, "%d", vec__len(double_v));
+
+	vec__free(double_v);
 }
 
 void test7(char *buf, size_t len)
@@ -170,6 +180,40 @@ void test7(char *buf, size_t len)
 	vec__pop(int_v);
 	vec__pop(int_v);
 	printed += snprintf(buf + printed, len - printed, "%d", vec__is_empty(int_v));
+
+	vec__free(int_v);
+}
+
+void test8(char *buf, size_t len)
+{
+	int *int_v = vec__new(sizeof(int)), to_insert = 10, low = 40000000, high = 50000000, iter;
+	size_t printed = 0;
+
+	srand(time(NULL));
+
+	iter = rand() % (low - high) + low;
+	for (int i = 0; i < iter; i++) {
+		int tmp = rand();
+		vec__push(int_v, tmp);
+	}
+
+	iter = rand() % (low - high) + low;
+	for (int i = 0; i < iter; i++)
+		vec__pop(int_v);
+
+	iter = rand() % (low - high) + low;
+	for (int i = 0; i < iter; i++)
+		vec__len(int_v);
+
+	iter = rand() % (low - high) + low;
+	for (int i = 0; i < iter; i++)
+		vec__is_empty(int_v);
+
+	iter = abs(rand()) % vec__len(int_v);
+	for (int i = 0; i < iter; i++)
+		vec__at(int_v, i);
+
+	vec__free(int_v);
 }
 
 int main(int argc, char *argv[])
@@ -215,7 +259,12 @@ int main(int argc, char *argv[])
 	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
 
 	test7(buf, sizeof(buf));
-	ASSERT(buf, "0 1", 6);
+	ASSERT(buf, "0 1", 7);
+	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+
+	strcpy(buf, "Randomized test");
+	test8(buf, sizeof(buf));
+	ASSERT(buf, "Randomized test", 8);
 	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
 
 	return 0;
