@@ -25,7 +25,7 @@ vec__free(int_v);
 
 **clone the repo**
 ```bash
-git clone $
+git clone https://github.com/Sberm/vec.h.git
 ```
 
 Run examples
