@@ -16,10 +16,11 @@ void inline passed(int test_num)
 
 void inline failed(int test_num)
 {
-	printf("\033[0;31m  Test %d passed\033[0;0m\n", test_num);
+	printf("\033[0;31m  Test %d failed\033[0;0m\n", test_num);
 }
 
 #define ASSERT(expr1, expr2, i) if (strcmp((expr1), (expr2)) == 0) passed(i); else failed(i);
+#define ASSERT_EITHER(expr1, expr2, expr3, i) if ((strcmp((expr1), (expr2)) & (strcmp((expr1), (expr3)))) == 0) passed(i); else failed(i);
 
 void test1(char *buf, size_t len)
 {
@@ -190,6 +191,7 @@ void test8(char *buf, size_t len)
 	size_t printed = 0;
 
 	srand(time(NULL));
+	int cnt = 0;
 
 	iter = rand() % (low - high) + low;
 	for (int i = 0; i < iter; i++) {
@@ -209,9 +211,11 @@ void test8(char *buf, size_t len)
 	for (int i = 0; i < iter; i++)
 		vec__is_empty(int_v);
 
-	iter = abs(rand()) % vec__len(int_v);
-	for (int i = 0; i < iter; i++)
-		vec__at(int_v, i);
+	if (vec__len(int_v) > 0) {
+		iter = abs(rand()) % vec__len(int_v);
+		for (int i = 0; i < iter; i++)
+			vec__at(int_v, i);
+	}
 
 	vec__free(int_v);
 }
@@ -243,7 +247,7 @@ int main(int argc, char *argv[])
 	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
 
 	test3(buf, sizeof(buf));
-	ASSERT(buf, "114.514 1919 0x0 cunt", 3);
+	ASSERT_EITHER(buf, "114.514 1919 0x0 cunt", "114.514 1919 (nil) cunt", 3); // clang: 0x0, gcc: (nil)
 	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
 
 	test4(buf, sizeof(buf), str1, str2);

@@ -62,9 +62,8 @@ int __vec__push(void *__vec, void *elem, size_t elem_size)
 	assert(vec->mem_size == elem_size);
 	new_size = vec->len * vec->mem_size + elem_size;
 
-	if (new_size > vec->capacity && __vec__expand(vec, new_size)) {
+	if (new_size > vec->capacity && __vec__expand(vec, new_size))
 		return -1;
-	}
 		
 	memcpy(vec->raw + vec->len * vec->mem_size, elem, elem_size);
 	++vec->len;
