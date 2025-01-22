@@ -220,6 +220,34 @@ void test8(char *buf, size_t len)
 	vec__free(int_v);
 }
 
+void test9(char *buf, size_t len)
+{
+	double *double_v = vec__new(sizeof(double));
+	size_t printed = 0;
+
+	vec__push(double_v, 114.514);
+	vec__push(double_v, 1919.81);
+
+	printed += snprintf(buf + printed, len - printed, "%.3f ", vec__at(double_v, 0));
+	printed += snprintf(buf + printed, len - printed, "%.3f", vec__at(double_v, 1));
+
+	vec__free(double_v);
+}
+
+void test10(char *buf, size_t len)
+{
+	short *short_v = vec__new(sizeof(short)), elem1 = 114, elem2 = 514;
+	size_t printed = 0;
+
+	vec__pushp(short_v, &elem1);
+	vec__pushp(short_v, &elem2);
+
+	printed += snprintf(buf + printed, len - printed, "%hd ", vec__at(short_v, 0));
+	printed += snprintf(buf + printed, len - printed, "%hd", vec__at(short_v, 1));
+
+	vec__free(short_v);
+}
+
 int main(int argc, char *argv[])
 {
 	char buf[2048], verbose = 0;
@@ -269,6 +297,14 @@ int main(int argc, char *argv[])
 	strcpy(buf, "Randomized test");
 	test8(buf, sizeof(buf));
 	ASSERT(buf, "Randomized test", 8);
+	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+
+	test9(buf, sizeof(buf));
+	ASSERT(buf, "114.514 1919.810", 9);
+	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+
+	test10(buf, sizeof(buf));
+	ASSERT(buf, "114 514", 10);
 	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
 
 	return 0;

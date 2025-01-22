@@ -19,7 +19,14 @@ inline int vec__is_empty(void *__vec)
 }
 
 int __vec__push(void *__vec, void *elem, size_t elem_size);
-#define vec__push(vec, elem) __vec__push((vec), &(elem), sizeof(*(typeof(vec))0))
+#define vec__push(vec, elem) do {                      \
+  typeof(*(typeof(vec))0) __tmp = (elem);              \
+  __vec__push((vec), &__tmp, sizeof(*(typeof(vec))0)); \
+} while (0);                                           \
+
+// push elements from a pointer
+#define vec__pushp(vec, elemp)                          \
+  __vec__push((vec), (elemp), sizeof(*(typeof(vec))0)); \
 
 void *__vec__at(void *vec, size_t pos);
 #define vec__at(vec, pos) *(typeof((vec)))__vec__at((vec), (pos))
