@@ -5,7 +5,7 @@
 
 struct vec {
 	size_t len; /* number of members */
-	size_t mem_size;
+	size_t mem_size; /* size of a single element */
 	size_t capacity; /* in bytes */
 	char *raw;
 };

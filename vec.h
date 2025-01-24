@@ -15,14 +15,20 @@ inline int vec__len(void *__vec)
 
 inline int vec__is_empty(void *__vec)
 {
-  return vec__len_st(__vec) == 0;
+	return vec__len_st(__vec) == 0;
 }
 
+// supports an instance of an element and a variable
+// example:
+//   vec__push(vector, 1);
+//   int i = 1;
+//   vec__push(vector, i);
+//
 int __vec__push(void *__vec, void *elem, size_t elem_size);
 #define vec__push(vec, elem) do {                      \
   typeof(*(typeof(vec))0) __tmp = (elem);              \
   __vec__push((vec), &__tmp, sizeof(*(typeof(vec))0)); \
-} while (0);                                           \
+} while (0);
 
 // push elements from a pointer
 #define vec__pushp(vec, elemp)                          \
