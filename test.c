@@ -248,6 +248,40 @@ void test10(char *buf, size_t len)
 	vec__free(short_v);
 }
 
+// vector modification test
+void test11(char *buf, size_t len)
+{
+	size_t printed = 0;
+	int *int_v = vec__new(sizeof(int));
+	struct custom_struct *custom_struct_v = vec__new(sizeof(struct custom_struct));
+	struct custom_struct *tmp, elem;
+
+	vec__push(int_v, 10);
+	vec__at(int_v, 0) = 11;
+	printed += snprintf(buf + printed, len - printed, "%d ", vec__at(int_v, 0));
+
+	struct custom_struct cstruct = {
+		.d1 = 114.514,
+		.s1 = 1919,
+		.c = { [0] = 'c', [1] = 'u', [2] = 'n', [3] = 't', [4] = 0 },
+		.p = NULL,
+		.inner = { .a = 1, .b = 2, .f = 114.0f },
+	};
+
+	vec__push(custom_struct_v, cstruct);
+	tmp = &vec__at(custom_struct_v, 0);
+	tmp->d1 = 1.4;
+	tmp->s1 = 69;
+	tmp->c[0] = 'f', tmp->c[1] = 'o', tmp->c[2] = 'o', tmp->c[3] = 0;
+	tmp->inner.b = 50;
+
+	elem = vec__at(custom_struct_v, 0);
+	printed += snprintf(buf + printed, len - printed, "%.3f %hd %s %d", elem.d1, elem.s1, elem.c, elem.inner.b);
+
+	vec__free(int_v);
+	vec__free(custom_struct_v);
+}
+
 int main(int argc, char *argv[])
 {
 	char buf[2048], verbose = 0;
@@ -305,6 +339,10 @@ int main(int argc, char *argv[])
 
 	test10(buf, sizeof(buf));
 	ASSERT(buf, "114 514", 10);
+	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+
+	test11(buf, sizeof(buf));
+	ASSERT(buf, "11 1.400 69 foo 50", 11);
 	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
 
 	return 0;
