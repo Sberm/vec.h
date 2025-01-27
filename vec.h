@@ -7,6 +7,8 @@ void *vec__new(size_t mem_size);
 void vec__free(void *__vec);
 void vec__pop(void *__vec);
 size_t vec__len_st(void *__vec);
+int vec__reserve(void *__vec, size_t num);
+size_t vec__cap(void *__vec);
 
 inline int vec__len(void *__vec)
 {

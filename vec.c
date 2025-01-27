@@ -1,14 +1,38 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <stdint.h>
+#include <errno.h>
 #define DEFAULT_VEC_SIZE 16
 
+// TODO: every vector allocated is limited to 4GB of raw memory size because of the limit of size_t,
+// switch it to ll to allow bigger allocations
 struct vec {
 	size_t len; /* number of members */
 	size_t mem_size; /* size of a single element */
 	size_t capacity; /* in bytes */
 	char *raw;
 };
+
+int __vec__expand(struct vec *vec, size_t size_least);
+
+// reserve num number of elements for the vector, do so by allocating memory exponentially
+int vec__reserve(void *__vec, size_t num)
+{
+	struct vec *vec = __vec;
+	int err = 0;
+
+	if (num <= vec->len)
+		return 0;
+
+	err = __vec__expand(vec, num);
+	if (err)
+		return err;
+
+	vec->len = num;
+
+	return err;
+}
 
 void *vec__new(size_t mem_size)
 {
@@ -36,17 +60,22 @@ void vec__free(void *__vec)
 	free(vec);
 }
 
-int __vec__expand(struct vec *vec, size_t new_size)
+int __vec__expand(struct vec *vec, size_t size_least)
 {
-	size_t capacity = vec->capacity;
+	size_t capacity = vec->capacity, capacity_old = capacity;
 	void *__new;
 
-	while (capacity < new_size)
+	while (capacity < size_least) {
 		capacity <<= 1;
+		// to prevent overflow
+		if (capacity <= capacity_old)
+			return -ENOMEM;
+		capacity_old = capacity;
+	}
 
 	__new = realloc(vec->raw, capacity);
 	if (__new == NULL)
-		return -1;
+		return -ENOMEM;
 
 	vec->raw = __new;
 	vec->capacity = capacity;
@@ -57,14 +86,15 @@ int __vec__expand(struct vec *vec, size_t new_size)
 int __vec__push(void *__vec, void *elem, size_t elem_size)
 {
 	struct vec *vec = __vec;
-	size_t new_size;
+	size_t size_least;
 
 	assert(vec->mem_size == elem_size);
-	new_size = vec->len * vec->mem_size + elem_size;
+	assert(vec->len * vec->mem_size <= SIZE_MAX - elem_size);
+	size_least = vec->len * vec->mem_size + elem_size;
 
-	if (new_size > vec->capacity && __vec__expand(vec, new_size))
+	if (size_least > vec->capacity && __vec__expand(vec, size_least))
 		return -1;
-		
+
 	memcpy(vec->raw + vec->len * vec->mem_size, elem, elem_size);
 	++vec->len;
 	
@@ -91,4 +121,11 @@ size_t vec__len_st(void *__vec)
 	struct vec *vec = __vec;
 
 	return vec->len;
+}
+
+size_t vec__cap(void *__vec)
+{
+	struct vec *vec = __vec;
+
+	return vec->capacity;
 }

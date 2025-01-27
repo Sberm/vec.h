@@ -282,6 +282,22 @@ void test11(char *buf, size_t len)
 	vec__free(custom_struct_v);
 }
 
+// reservation test
+void test12(char *buf, size_t len)
+{
+	size_t printed = 0;
+	int *int_vector = vec__new(sizeof(int));
+
+	if (vec__reserve(int_vector, 100)) {
+		printed += snprintf(buf + printed, len - printed, "Reservation failed");
+		return;
+	}
+
+	printed += snprintf(buf + printed, len - printed, "len %d capacity %d",
+			    vec__len(int_vector), (int)vec__cap(int_vector));
+	vec__free(int_vector);
+}
+
 int main(int argc, char *argv[])
 {
 	char buf[2048], verbose = 0;
@@ -343,6 +359,10 @@ int main(int argc, char *argv[])
 
 	test11(buf, sizeof(buf));
 	ASSERT(buf, "11 1.400 69 foo 50", 11);
+	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+
+	test12(buf, sizeof(buf));
+	ASSERT(buf, "len 100 capacity 128", 12);
 	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
 
 	return 0;
