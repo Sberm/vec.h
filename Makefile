@@ -1,16 +1,17 @@
 TARGETS := test.o vec.o
 INCLUDE := -I.
+CFLAGS := -O2 -Wall -Wextra -Wstrict-overflow=5
 
 all: vec_test
 
 vec_test: $(TARGETS)
-	gcc $(TARGETS) -o $@
+	gcc $(CFLAGS) $(TARGETS) -o $@
 
 vec.o: vec.c vec.h
-	gcc -O2 -c $(INCLUDE) $<
+	gcc $(CFLAGS) -c $(INCLUDE) $<
 
 test.o: test.c
-	gcc -O2 -c $(INCLUDE) $<
+	gcc $(CFLAGS) -c $(INCLUDE) $<
 
 clean:
 	rm -rf $(TARGETS) vec_test
