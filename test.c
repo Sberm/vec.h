@@ -185,14 +185,11 @@ void test7(char *buf, size_t len)
 	vec__free(int_v);
 }
 
-void test8(char *buf, size_t len)
+void test8(void)
 {
-	int *int_v = vec__new(sizeof(int)), to_insert = 10, low = 40000000, high = 50000000, iter;
-	size_t printed = 0;
+	int *int_v = vec__new(sizeof(int)), low = 40000000, high = 50000000, iter;
 
 	srand(time(NULL));
-	int cnt = 0;
-
 	iter = rand() % (low - high) + low;
 	for (int i = 0; i < iter; i++) {
 		int tmp = rand();
@@ -345,7 +342,7 @@ int main(int argc, char *argv[])
 	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
 
 	strcpy(buf, "Randomized test");
-	test8(buf, sizeof(buf));
+	test8();
 	ASSERT(buf, "Randomized test", 8);
 	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
 
