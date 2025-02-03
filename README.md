@@ -13,6 +13,9 @@ vec__push(int_v, elem3);
 int tmp = vec__at(int_v, 1);
 printf("second element: %d\n", tmp); /* second element: 14 */
 
+// update element
+vec__at(int_v, 0) = 23;
+
 vec__pop(int_v);
 
 int len = vec__len(int_v);
