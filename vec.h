@@ -10,12 +10,12 @@ size_t vec__len_st(void *__vec);
 int vec__reserve(void *__vec, size_t num);
 size_t vec__cap(void *__vec);
 
-inline int vec__len(void *__vec)
+static inline int vec__len(void *__vec)
 {
 	return (int)vec__len_st(__vec);
 }
 
-inline int vec__is_empty(void *__vec)
+static inline int vec__is_empty(void *__vec)
 {
 	return vec__len_st(__vec) == 0;
 }

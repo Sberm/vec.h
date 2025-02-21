@@ -23,12 +23,12 @@ int vec__reserve(void *__vec, size_t num)
 	if (num <= vec->len)
 		return 0;
 
-	err = __vec__expand(vec, num);
+	assert(num <= SIZE_MAX / vec->mem_size);
+	err = __vec__expand(vec, num * vec->mem_size);
 	if (err)
 		return err;
 
 	vec->len = num;
-
 	return err;
 }
 
