@@ -5,8 +5,6 @@
 #include <errno.h>
 #define DEFAULT_VEC_SIZE 16
 
-// TODO: every vector allocated is limited to 4GB of raw memory size because of the limit of size_t,
-// switch it to ll to allow bigger allocations
 struct vec {
 	size_t len; /* number of members */
 	size_t mem_size; /* size of a single element */
