@@ -87,7 +87,7 @@ int __vec__push(void *__vec, void *elem, size_t elem_size)
 	size_t size_least;
 
 	assert(vec->mem_size == elem_size);
-	assert(vec->len * vec->mem_size <= SIZE_MAX - elem_size);
+	assert(vec->len + 1 <= SIZE_MAX / vec->mem_size);
 	size_least = vec->len * vec->mem_size + elem_size;
 
 	if (size_least > vec->capacity && __vec__expand(vec, size_least))
