@@ -298,9 +298,6 @@ void test12(char *buf, size_t len)
 int main(int argc, char *argv[])
 {
 	char buf[2048], verbose = 0;
-	char str1[] = "cutiepie";
-	char str2[] = "Denzel";
-	char str3[] = "this test is designed to fail";
 
 	buf[0] = 0;
 
@@ -313,54 +310,67 @@ int main(int argc, char *argv[])
 	if (verbose)
 		printf("\n");
 
+	char *ans1 = "0 1 2 3 4";
 	test1(buf, sizeof(buf));
-	ASSERT(buf, "0 1 2 3 4", 1);
-	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+	ASSERT(buf, ans1, 1);
+	if (verbose && printf("\n    output:          %s\n    supposed-to-be:  %s\n\n", buf, ans1)) {}
 
+	char *ans2 = "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49";
 	test2(buf, sizeof(buf));
-	ASSERT(buf, "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49", 2);
-	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+	ASSERT(buf, ans2, 2);
+	if (verbose && printf("\n    output:          %s\n    supposed-to-be:  %s\n\n", buf, ans2)) {}
 
+	char *ans3_1 = "114.514 1919 0x0 cunt", *ans3_2 = "114.514 1919 (nil) cunt";
 	test3(buf, sizeof(buf));
-	ASSERT_EITHER(buf, "114.514 1919 0x0 cunt", "114.514 1919 (nil) cunt", 3); // clang: 0x0, gcc: (nil)
-	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+	ASSERT_EITHER(buf, ans3_1, ans3_2, 3); // clang: 0x0, gcc: (nil)
+	if (verbose && printf("\n    output:          %s\n    supposed-to-be:  %s or %s\n\n", buf, ans3_1, ans3_2)) {}
 
-	test4(buf, sizeof(buf), str1, str2);
-	ASSERT(buf, "cutiepie Denzel", 4);
-	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+	char *ans4 = "cutiepie Denzel";
+	test4(buf, sizeof(buf), "cutiepie", "Denzel");
+	ASSERT(buf, ans4, 4);
+	if (verbose && printf("\n    output:          %s\n    supposed-to-be:  %s\n\n", buf, ans4)) {}
 
-	test5(buf, sizeof(buf), str3);
-	ASSERT(buf, "wrong answer", 5);
-	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+	char *ans5 = "wrong answer";
+	test5(buf, sizeof(buf), "this test is designed to fail");
+	ASSERT(buf, ans5, 5);
+	if (verbose && printf("\n    output:          %s\n    supposed-to-be:  %s\n\n", buf, ans5)) {}
 
+	char *ans6 = "1 0 0 99 118";
 	test6(buf, sizeof(buf));
-	ASSERT(buf, "1 0 0 99 118", 6);
-	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+	ASSERT(buf, ans6, 6);
+	if (verbose && printf("\n    output:          %s\n    supposed-to-be:  %s\n\n", buf, ans6)) {}
 
+	char *ans7 = "0 1";
 	test7(buf, sizeof(buf));
-	ASSERT(buf, "0 1", 7);
-	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+	ASSERT(buf, ans7, 7);
+	if (verbose && printf("\n    output:          %s\n    supposed-to-be:  %s\n\n", buf, ans7)) {}
 
-	strcpy(buf, "Randomized test");
+	char *ans8 = "Randomized test";
+	strcpy(buf, ans8);
 	test8();
-	ASSERT(buf, "Randomized test", 8);
-	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+	ASSERT(buf, ans8, 8);
+	if (verbose && printf("\n    output:          %s\n    supposed-to-be:  %s\n\n", buf, ans8)) {}
 
+	char *ans9 = "114.514 1919.810";
 	test9(buf, sizeof(buf));
-	ASSERT(buf, "114.514 1919.810", 9);
-	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+	ASSERT(buf, ans9, 9);
+	if (verbose && printf("\n    output:          %s\n    supposed-to-be:  %s\n\n", buf, ans9)) {}
 
+	char *ans10 = "114 514";
 	test10(buf, sizeof(buf));
-	ASSERT(buf, "114 514", 10);
-	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+	ASSERT(buf, ans10, 10);
+	if (verbose && printf("\n    output:          %s\n    supposed-to-be:  %s\n\n", buf, ans10)) {}
 
+	char *ans11 = "11 1.400 69 foo 50";
 	test11(buf, sizeof(buf));
-	ASSERT(buf, "11 1.400 69 foo 50", 11);
-	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+	ASSERT(buf, ans11, 11);
+	if (verbose && printf("\n    output:          %s\n    supposed-to-be:  %s\n\n", buf, ans11)) {}
 
+	// 128 * sizeof(int)
+	char *ans12 = "len 100 capacity 512";
 	test12(buf, sizeof(buf));
-	ASSERT(buf, "len 100 capacity 128", 12);
-	if (verbose && printf("\n    buf: %s\n\n", buf)) {}
+	ASSERT(buf, ans12, 12);
+	if (verbose && printf("\n    output:          %s\n    supposed-to-be:  %s\n\n", buf, ans12)) {}
 
 	return 0;
 }
