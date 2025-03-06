@@ -1,5 +1,5 @@
 *.o
 *~
 vec_test
-foo.c
 a.out
+foo*
