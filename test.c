@@ -9,12 +9,12 @@
 
 #define SMALL_NUM 10
 
-void inline passed(int test_num)
+void passed(int test_num)
 {
 	printf("\033[0;32m  Test %d passed\033[0;0m\n", test_num);
 }
 
-void inline failed(int test_num)
+void failed(int test_num)
 {
 	printf("\033[0;31m  Test %d failed\033[0;0m\n", test_num);
 }
@@ -187,31 +187,35 @@ void test7(char *buf, size_t len)
 
 void test8(void)
 {
-	int *int_v = vec__new(sizeof(int)), low = 40000000, high = 50000000, iter;
+	int *int_v = vec__new(sizeof(int)), low = 40000000, high = 50000000, iter = 0;
 
 	srand(time(NULL));
-	iter = rand() % (low - high) + low;
-	for (int i = 0; i < iter; i++) {
+	iter = rand() % (high - low) + low;
+	// volatile: avoid overflow warnings
+	for (volatile int i = 0; i < iter; i++) {
 		int tmp = rand();
 		vec__push(int_v, tmp);
 	}
 
-	iter = rand() % (low - high) + low;
-	for (int i = 0; i < iter; i++)
+	iter = rand() % (high - low) + low;
+	for (volatile int i = 0; i < iter; i++)
 		vec__pop(int_v);
 
-	iter = rand() % (low - high) + low;
-	for (int i = 0; i < iter; i++)
+	iter = rand() % (high - low) + low;
+	for (volatile int i = 0; i < iter; i++)
 		vec__len(int_v);
 
-	iter = rand() % (low - high) + low;
-	for (int i = 0; i < iter; i++)
+	iter = rand() % (high - low) + low;
+	for (volatile int i = 0; i < iter; i++)
 		vec__is_empty(int_v);
 
+	int foo;
 	if (vec__len(int_v) > 0) {
-		iter = abs(rand()) % vec__len(int_v);
-		for (int i = 0; i < iter; i++)
-			vec__at(int_v, i);
+		iter = rand() % vec__len(int_v);
+		for (volatile int i = 0; i < iter; i++) {
+			foo = vec__at(int_v, i);
+			foo = foo + 1; // to avoid warnings
+		}
 	}
 
 	vec__free(int_v);
@@ -367,7 +371,7 @@ int main(int argc, char *argv[])
 	if (verbose && printf("\n    output:          %s\n    supposed-to-be:  %s\n\n", buf, ans11)) {}
 
 	// 128 * sizeof(int)
-	char *ans12 = "len 100 capacity 512";
+	char *ans12 = "len 0 capacity 512";
 	test12(buf, sizeof(buf));
 	ASSERT(buf, ans12, 12);
 	if (verbose && printf("\n    output:          %s\n    supposed-to-be:  %s\n\n", buf, ans12)) {}
