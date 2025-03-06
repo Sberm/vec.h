@@ -28,7 +28,6 @@ int vec__reserve(void *__vec, size_t num)
 	if (err)
 		return err;
 
-	vec->len = num;
 	return err;
 }
 
