@@ -108,31 +108,54 @@ void vec__pop(void *__vec)
 
 void *__vec__at(void *__vec, size_t pos)
 {
-	struct vec *vec = __vec;
+	const struct vec *vec = __vec;
 
 	return vec->raw + pos * vec->mem_size;
 }
 
-size_t vec__len_st(void *__vec)
+size_t vec__len_st(const void *__vec)
 {
-	struct vec *vec = __vec;
+	const struct vec *vec = __vec;
 
 	return vec->len;
 }
 
-size_t vec__cap(void *__vec)
+size_t vec__cap(const void *__vec)
 {
-	struct vec *vec = __vec;
+	const struct vec *vec = __vec;
 
 	return vec->capacity;
 }
 
-int vec__len(void *__vec)
+int vec__len(const void *__vec)
 {
 	return (int)vec__len_st(__vec);
 }
 
-int vec__is_empty(void *__vec)
+int vec__is_empty(const void *__vec)
 {
 	return vec__len_st(__vec) == 0;
+}
+
+// expand the vector so that it can take at least (cap + size) bytes of data
+int vec__alloc(struct vec *_vec, size_t size)
+{
+	struct vec *vec = _vec;
+	size_t cap = vec__cap(vec);
+	size_t new_cap = cap + size;
+
+	return __vec__expand(vec, new_cap);
+}
+
+void vec__len_inc(struct vec *_vec, size_t size)
+{
+	struct vec *vec = _vec;
+
+	vec->len += size;
+}
+
+size_t vec__mem_size(const void *_vec)
+{
+	const struct vec *vec = _vec;
+	return vec->mem_size;
 }

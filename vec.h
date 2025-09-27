@@ -6,11 +6,14 @@
 void *vec__new(size_t mem_size);
 void vec__free(void *__vec);
 void vec__pop(void *__vec);
-size_t vec__len_st(void *__vec);
+size_t vec__len_st(const void *__vec);
 int vec__reserve(void *__vec, size_t num);
-size_t vec__cap(void *__vec);
-int vec__len(void *__vec);
-int vec__is_empty(void *__vec);
+size_t vec__cap(const void *__vec);
+int vec__len(const void *__vec);
+int vec__is_empty(const void *__vec);
+int vec__alloc(void *vec, size_t size);
+void vec__len_inc(void *vec, size_t size);
+size_t vec__mem_size(const void *vec);
 
 // supports an instance of an element and a variable
 // example:
@@ -28,7 +31,7 @@ int __vec__push(void *__vec, void *elem, size_t elem_size);
 #define vec__pushp(vec, elemp)                          \
   __vec__push((vec), (elemp), sizeof(*(typeof(vec))0)); \
 
-void *__vec__at(void *vec, size_t pos);
+void *__vec__at(const void *vec, size_t pos);
 #define vec__at(vec, pos) *(typeof((vec)))__vec__at((vec), (pos))
 
 #endif
