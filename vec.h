@@ -11,9 +11,10 @@ int vec__reserve(void *__vec, size_t num);
 size_t vec__cap(const void *__vec);
 int vec__len(const void *__vec);
 int vec__is_empty(const void *__vec);
-int vec__alloc(void *vec, size_t size);
-void vec__len_inc(void *vec, size_t size);
-size_t vec__mem_size(const void *vec);
+int vec__alloc(void *__vec, size_t size);
+void vec__len_inc(void *__vec, size_t size);
+size_t vec__mem_size(const void *__vec);
+int vec__resize(void *__vec, size_t new_len);
 
 // supports an instance of an element and a variable
 // example:

@@ -138,24 +138,37 @@ int vec__is_empty(const void *__vec)
 }
 
 // expand the vector so that it can take at least (cap + size) bytes of data
-int vec__alloc(struct vec *_vec, size_t size)
+int vec__alloc(struct vec *__vec, size_t size)
 {
-	struct vec *vec = _vec;
+	struct vec *vec = __vec;
 	size_t cap = vec__cap(vec);
 	size_t new_cap = cap + size;
 
 	return __vec__expand(vec, new_cap);
 }
 
-void vec__len_inc(struct vec *_vec, size_t size)
+// this will not expand the vector
+void vec__len_inc(struct vec *__vec, size_t size)
 {
-	struct vec *vec = _vec;
+	struct vec *vec = __vec;
 
 	vec->len += size;
 }
 
-size_t vec__mem_size(const void *_vec)
+size_t vec__mem_size(const void *__vec)
 {
-	const struct vec *vec = _vec;
+	const struct vec *vec = __vec;
+
 	return vec->mem_size;
+}
+
+int vec__resize(void *__vec, size_t new_len)
+{
+	struct vec *vec = __vec;
+
+	if (new_len < vec->len)
+		vec->len = new_len;
+	else if (new_len > vec->len)
+		return __vec__expand(vec, new_len * vec->mem_size);
+	return 0;
 }
